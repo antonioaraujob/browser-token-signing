@@ -133,7 +133,10 @@ bool doSign(PluginInstance *obj, NPVariant *args, unsigned argCount, NPVariant *
 			free(optionsLanguage);
 		}
 	}
-	EstEID_setLocale(pluginLanguage);
+	//EstEID_setLocale(pluginLanguage);
+	// la linea anterior se comento y se asigna el lenguaje ru porque alli
+	// se colocaron las traducciones al espanol
+	EstEID_setLocale("ru");
 
 	void* wnd = getNativeWindowHandle(obj);
 
@@ -239,7 +242,10 @@ bool pluginGetProperty(PluginInstance *obj, NPIdentifier name, NPVariant *varian
 bool pluginInvoke(PluginInstance *obj, NPIdentifier name, NPVariant *args, unsigned argCount, NPVariant *result) {	
 	LOG_LOCATION;
 	EstEID_clear_error();
-	EstEID_setLocale(pluginLanguage);
+	//EstEID_setLocale(pluginLanguage);
+	// la linea anterior se comento y se asigna el lenguaje ru porque alli
+        // se colocaron las traducciones al espanol
+	EstEID_setLocale("ru");
 
 	if (isSameIdentifier(name, "sign")) {
 		return doSign(obj, args, argCount, result);

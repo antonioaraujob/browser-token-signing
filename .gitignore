@@ -7,3 +7,4 @@ ie/esteidpluginie_i.h
 *.ipch
 plugin-win.res
 *.exp
+*.so

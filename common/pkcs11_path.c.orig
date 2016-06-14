@@ -36,28 +36,9 @@ const char *estPath = "opensc-pkcs11.so";
 const char *latPath = "otlv-pkcs11.so";
 const char *finPath = "opensc-pkcs11.so";
 const char *litPath = "/usr/lib/ccs/libccpkip11.so";
-
-// controladores para hardware de Venezuela
-// tarjeta FII
-const char * veFiiPath = "/usr/lib/ClassicClient/libgclib.so";
-
-// eToken Pro
-#if defined(__x86_64__) || defined(_M_X64)
-/* x86 64-bit ----------------------------------------------- */
-const char * veTokenProPath = "/usr/lib64/libeTPkcs11.so";
-
-#elif defined(__i386) || defined(_M_IX86)
-/* x86 32-bit ----------------------------------------------- */
-const char * veTokenProPath = "/usr/lib/libeTPkcs11.so";
-
 #endif
 
-
-#endif
-
-//enum country {EST, LIT, LAT, FIN, UNKNOWN};
-// agregado dos nuevos codigos VEFFI para la tarjeta de FII y VETOKEN para el eToken PRO
-enum country {EST, LIT, LAT, FIN, VEFII, VETOKEN, UNKNOWN};
+enum country {EST, LIT, LAT, FIN, UNKNOWN};
 enum country pathCountry = UNKNOWN;
 
 static EstEID_Map createMap() {
@@ -67,28 +48,23 @@ static EstEID_Map createMap() {
     map = EstEID_mapPut(map, "3BDE18FFC080B1FE451F034573744549442076657220312E302B", estPath);
     map = EstEID_mapPut(map, "3B5E11FF4573744549442076657220312E30", estPath);
     map = EstEID_mapPut(map, "3B6E00004573744549442076657220312E30", estPath);
-
+    
     map = EstEID_mapPut(map, "3BFE1800008031FE454573744549442076657220312E30A8", estPath);
     map = EstEID_mapPut(map, "3BFE1800008031FE45803180664090A4561B168301900086", estPath);
     map = EstEID_mapPut(map, "3BFE1800008031FE45803180664090A4162A0083019000E1", estPath);
     map = EstEID_mapPut(map, "3BFE1800008031FE45803180664090A4162A00830F9000EF", estPath);
-
+    
     map = EstEID_mapPut(map, "3BF9180000C00A31FE4553462D3443432D303181", estPath);
     map = EstEID_mapPut(map, "3BF81300008131FE454A434F5076323431B7", estPath);
     map = EstEID_mapPut(map, "3BFA1800008031FE45FE654944202F20504B4903", estPath);
     map = EstEID_mapPut(map, "3BFE1800008031FE45803180664090A4162A00830F9000EF", estPath);
-
+    
     map = EstEID_mapPut(map, "3BDD18008131FE45904C41545649412D65494490008C", latPath);
-
+    
     map = EstEID_mapPut(map, "3B7B940000806212515646696E454944", finPath);
-
+    
     map = EstEID_mapPut(map, "3BF81300008131FE45536D617274417070F8", litPath);
     map = EstEID_mapPut(map, "3B7D94000080318065B08311C0A983009000", litPath);
-
-    // Venezuela: tarjeta FII
-    map = EstEID_mapPut(map, "3B7D94000080318065B0831100C883009000", veFiiPath);
-    // Venezuela: eToken PRO
-    map = EstEID_mapPut(map, "3BD518008131FE7D8073C82110F4", veTokenProPath);
     return map;
 }
 
@@ -105,10 +81,6 @@ void setPathCountry(const char *path) {
         pathCountry = LIT;
     } else if (!strcmp(path, finPath)) {
         pathCountry = FIN;
-    } else if (!strcmp(path, veFiiPath)) {
-      pathCountry = VEFII;
-    } else if (!strcmp(path, veTokenProPath)) {
-      pathCountry = VETOKEN;
     } else {
         pathCountry = UNKNOWN;
     }
@@ -125,7 +97,7 @@ const char *getPkcs11ModulePath() {
         EstEID_mapFree(atrToDriverMap);
         return estPath;
     }
-
+    
     LOG_LOCATION
     for (size_t i = 0; i < strlen(atrs) - 1; ++i) {
         const char *path = EstEID_mapGet(atrToDriverMap, &atrs[i]);
